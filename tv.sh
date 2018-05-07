@@ -41,7 +41,7 @@ function show_menu() {
 
     echo -e "${RED_TEXT} System: ${NORMAL}"
     echo -e "${MENU} ${NUMBER} 11)${MENU} Returns all system settings ${NORMAL}"
-    echo -e "${MENU} ${NUMBER} 13)${MENU} Stand by ${NORMAL}"
+    echo -e "${MENU} ${NUMBER} 12)${MENU} Stand by ${NORMAL}"
     echo -e "${MENU} ${NUMBER} 13)${MENU} Send GET command ${NORMAL}"
     echo -e "${MENU} ${NUMBER} 14)${MENU} Send POST command ${NORMAL}"
 
