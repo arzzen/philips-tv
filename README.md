@@ -8,7 +8,7 @@ One time initialization:
 ![screenshot from 2018-05-07 12-20-40](https://user-images.githubusercontent.com/6382002/39697398-1c09ab34-51f1-11e8-915a-7bad2f26ec28.png)
 
 Available commands:
-![screenshot from 2018-05-07 12-15-17](https://user-images.githubusercontent.com/6382002/39697183-54a18832-51f0-11e8-9136-c416bd25aea6.png)
+![screenshot from 2018-05-07 12-23-19](https://user-images.githubusercontent.com/6382002/39697521-770c3006-51f1-11e8-8ebb-6ac763ec2221.png)
 
 ## Usage
 
