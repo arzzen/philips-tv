@@ -4,6 +4,10 @@ Tools to control Philips 2016, 2017, 2018 Android TVs via command line.
 
 ## Screenshots
 
+One time initialization:
+![screenshot from 2018-05-07 12-20-40](https://user-images.githubusercontent.com/6382002/39697398-1c09ab34-51f1-11e8-915a-7bad2f26ec28.png)
+
+Available commands:
 ![screenshot from 2018-05-07 12-15-17](https://user-images.githubusercontent.com/6382002/39697183-54a18832-51f0-11e8-9136-c416bd25aea6.png)
 
 ## Usage
