@@ -59,7 +59,7 @@ function option_picked() {
 }
 
 function randomString() {
-    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -n 1
+    xxd -l16 -ps /dev/urandom | base64 | cut -c1-32
 }
 
 function signature() {
