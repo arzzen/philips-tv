@@ -85,7 +85,10 @@ function pair() {
 
     secret_key="ZmVay1EQVFOaZhwQ4Kv81ypLAZNczV9sG4KkseXWn1NEk6cXmPKO/MCa9sryslvLCFMnNe4Z4CPXzToowvhHvA=="
     auth_timestamp="$timestamp$pin"
-    auth_key_s=$(echo $secret_key | base64 -d)
+    case "$OSTYPE" in
+      linux*)  auth_key_s=$(echo $secret_key | base64 -d) ;;
+      darwin*)  auth_key_s=$(echo $secret_key | base64 -D) ;;
+    esac
     signature=$(signature $auth_key_s $auth_timestamp)
 
     auth="{\"device\":{\"device_name\":\"heliotrope\",\"device_os\":\"Android\",\"app_name\":\"ApplicationName\",\"type\":\"native\",\"app_id\":\"app.id\",\"id\":\"$deviceId\"},\"auth\":{\"auth_AppId\":\"1\",\"pin\":$pin,\"auth_timestamp\":\"$auth_timestamp\",\"auth_signature\":\"$signature\"}}"
