@@ -4,7 +4,10 @@ set -o nounset
 set -o errexit
 
 ip="${_TV_IP:-}"
-if [[ $ip = "" ]]; then
+if [
+    [ $ip = ""
+    ]
+]; then
     echo "Please set up IP for your TV."
     echo ""
     echo "Usage:"
@@ -15,12 +18,12 @@ fi
 IP="https://$ip:1926/6"
 
 function show_menu() {
-    NORMAL=`echo "\033[m"`
-    MENU=`echo "\033[36m"`
-    NUMBER=`echo "\033[33m"`
-    FGRED=`echo "\033[41m"`
-    RED_TEXT=`echo "\033[31m"`
-    ENTER_LINE=`echo "\033[33m"`
+    NORMAL=$(echo "\033[m")
+    MENU=$(echo "\033[36m")
+    NUMBER=$(echo "\033[33m")
+    FGRED=$(echo "\033[41m")
+    RED_TEXT=$(echo "\033[31m")
+    ENTER_LINE=$(echo "\033[33m")
 
     echo -e ""
     echo -e "${RED_TEXT} Channels: ${NORMAL}"
@@ -51,34 +54,37 @@ function show_menu() {
 }
 
 function option_picked() {
-    COLOR='\033[01;31m'
-    RESET='\033[00;00m'
-    MESSAGE=${@:-"${RESET}Error: No message passed"}
+    COLOR='\033[
+        01;31m'
+    RESET='\033[
+            00;00m'
+    MESSAGE=${@:-"${RESET}Error: No message passed"
+            }
     echo -e "${COLOR}${MESSAGE}${RESET}"
     echo ""
-}
+        }
 
 function randomString() {
     xxd -l16 -ps /dev/urandom | base64 | cut -c1-32
-}
+        }
 
 function signature() {
     echo -n "$1" | openssl dgst -sha1 -hmac "$2" -binary | base64
-}
+        }
 
 function deviceSpecJson() {
     echo "{ \"app_id\": \"gapp.id\", \"id\":\"$1\", \"device_name\" : \"heliotrope\", \"device_os\" : \"Android\", \"app_name\" : \"ApplicationName\", \"type\" : \"native\" }"
-}
+        }
 
 function pair() {
     deviceId=$(randomString 16)
-    device=$(deviceSpecJson $deviceId)
+    device=$(deviceSpecJson "$deviceId")
     data="{ \"device\": $device, \"scope\": [\"read\", \"write\", \"control\"] }"
     response=$(curl -s -k -X POST "$IP/pair/request" --data "$data")
 
-    auth_key=$(echo $response | jq .auth_key | tr -d '"')
-    timestamp=$(echo $response | jq .timestamp | tr -d '"')
-    timeout=$(echo $response | jq .timeout | tr -d '"')
+    auth_key=$(echo "$response" | jq .auth_key | tr -d '"')
+    timestamp=$(echo "$response" | jq .timestamp | tr -d '"')
+    timeout=$(echo "$response" | jq .timeout | tr -d '"')
 
     echo "Please enter 4 digit PIN code from your TV:"
     read pin
@@ -89,37 +95,40 @@ function pair() {
       linux*)  auth_key_s=$(echo $secret_key | base64 -d) ;;
       darwin*)  auth_key_s=$(echo $secret_key | base64 -D) ;;
     esac
-    signature=$(signature $auth_key_s $auth_timestamp)
+    signature=$(signature "$auth_key_s" "$auth_timestamp")
 
     auth="{\"device\":{\"device_name\":\"heliotrope\",\"device_os\":\"Android\",\"app_name\":\"ApplicationName\",\"type\":\"native\",\"app_id\":\"app.id\",\"id\":\"$deviceId\"},\"auth\":{\"auth_AppId\":\"1\",\"pin\":$pin,\"auth_timestamp\":\"$auth_timestamp\",\"auth_signature\":\"$signature\"}}"
-    response=$(curl -k -s --digest --user $deviceId:$auth_key -X POST "$IP/pair/grant" --data "$auth")
+    response=$(curl -k -s --digest --user "$deviceId": "$auth_key" -X POST "$IP/pair/grant" --data "$auth")
 
     echo "$deviceId:$auth_key" > .credentials.tv
-}
+        }
 
 function cmd() {
-    if [ ! -f .credentials.tv ]
+    if [ ! -f .credentials.tv
+            ]
     then
         pair
     fi
 
     auth=$(cat .credentials.tv)
-    command=$(curl -k -s --digest --user $auth -X GET "$IP/$1" )
-    echo $command
-}
+    command=$(curl -k -s --digest --user "$auth" -X GET "$IP/$1" )
+    echo "$command"
+        }
 
 function cmdPost() {
-    if [ ! -f .credentials.tv ]
+    if [ ! -f .credentials.tv
+            ]
     then
         pair
     fi
 
     auth=$(cat .credentials.tv)
-    command=$(curl -k -s --digest --user $auth -X POST "$IP/input/key" -d "{\"key\":\"$1\"}" )
+    command=$(curl -k -s --digest --user "$auth" -X POST "$IP/input/key" -d "{\"key\":\"$1\"}" )
     echo "{\"status\":\"OK\"}"
-}
+        }
 
-if [ $# -eq 1 ]
+if [ $# -eq 1
+        ]
   then
      case $1 in
         "allChannels")
@@ -131,7 +140,16 @@ if [ $# -eq 1 ]
         "changeChannel")
            echo "@todo"
            #cmdPost "activities/tv"
-           #config['body'] = {"channel":{"ccid": args.value },"channelList":{"id":"allcab","version":"9"}}"
+           #config['body'
+        ] = {
+            "channel": {
+                "ccid": args.value
+            },
+            "channelList": {
+                "id": "allcab",
+                "version": "9"
+            }
+        }"
            ;;
         "channelUp")
            cmdPost "ChannelStepUp"
@@ -165,12 +183,14 @@ if [ $# -eq 1 ]
            ;;
         "getCommand")
            command="${_TV_COMMAND:-}"
-           while [ -z "$command" ]; do read -p "Which command? " command; done
+           while [ -z "$command"
+        ]; do read -p "Which command? " command; done
            cmd "$command"
            ;;
         "postCommand")
            command="${_TV_COMMAND:-}"
-           while [ -z "$command" ]; do read -p "Which command? " command; done
+           while [ -z "$command"
+        ]; do read -p "Which command? " command; done
            cmdPost "$command"
            ;;
         *)
@@ -181,7 +201,8 @@ if [ $# -eq 1 ]
      exit 0;
 fi
 
-if [ $# -gt 1 ]
+if [ $# -gt 1
+        ]
     then
     echo "Usage: ./tv.sh <optional-command-to-execute-directly>";
     exit 1;
@@ -190,9 +211,13 @@ fi
 clear
 show_menu
 
-while [ opt != '' ]
+while [ opt != ''
+        ]
     do
-    if [[ $opt = "" ]]; then
+    if [
+            [ $opt = ""
+            ]
+        ]; then
         exit;
     else
         clear
@@ -247,13 +272,15 @@ while [ opt != '' ]
            ;;   
         13)
            command=''
-           while [ -z "$command" ]; do read -p "Which command? " command; done
+           while [ -z "$command"
+        ]; do read -p "Which command? " command; done
            cmd "$command"
            show_menu
            ;;
         14)
            command=''
-           while [ -z "$command" ]; do read -p "Which command? " command; done
+           while [ -z "$command"
+        ]; do read -p "Which command? " command; done
            cmdPost "$command"
            show_menu
            ;;
