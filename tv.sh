@@ -88,6 +88,7 @@ function pair() {
     case "$OSTYPE" in
       linux*)  auth_key_s=$(echo $secret_key | base64 -d) ;;
       darwin*)  auth_key_s=$(echo $secret_key | base64 -D) ;;
+      *)  auth_key_s=$(echo $secret_key | base64 -d) ;;
     esac
     signature=$(signature $auth_key_s $auth_timestamp)
 
